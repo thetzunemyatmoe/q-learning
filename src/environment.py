@@ -216,7 +216,7 @@ class GridEnvironment:
 
     def get_state_index(self):
         # Convert the 2D position of the rover into a 1D state index
-        return self.rover[0] * self.size + self.rover[1]
+        return (self.rover[0] * self.size) + self.rover[1]
 
     def is_terminal_state(self):
         return self.rover == self.goal or self.the_grid[self.rover] == -1
