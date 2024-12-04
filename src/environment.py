@@ -29,9 +29,9 @@ class GridEnvironment:
 
         # Is goal reached?
         self.isReached = False
-        # Initialize the plot for dynamic updates
-        plt.ion()  # Turn on interactive mode
-        self.fig, self.ax = plt.subplots()  # Create a figure and axis for visualization
+        # # Initialize the plot for dynamic updates
+        # plt.ion()  # Turn on interactive mode
+        # self.fig, self.ax = plt.subplots()  # Create a figure and axis for visualization
 
     # Setting  random goal position as (x, y)
 

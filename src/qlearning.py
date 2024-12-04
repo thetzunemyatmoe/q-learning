@@ -6,15 +6,15 @@ import os
 
 
 class QLearning:
-    def __init__(self, learning_rate, discount_factor, epsilon, epsilon_decay=0.99, min_epsilon=0.1):
+    def __init__(self, epsilon_decay=0.99, min_epsilon=0.1):
         self.env = GridEnvironment(20)
         # Q-Table for all states and actions
         self.q_table = np.zeros((self.env.size * self.env.size, 4))
 
         # Hyperparameters
-        self.learning_rate = learning_rate
-        self.discount_factor = discount_factor
-        self.epsilon = epsilon
+        self.learning_rate = 0
+        self.discount_factor = 0
+        self.epsilon = 0
         self.epsilon_decay = epsilon_decay
         self.min_epsilon = min_epsilon
 
@@ -29,6 +29,8 @@ class QLearning:
         return self.actions[np.argmax(self.q_table[current_state, :])]
 
     def bellham(self, current_state, new_state, action, reward):
+        print(self.discount_factor)
+        print(self.learning_rate)
 
         # Get the Q-value for the current state-action pair
         q_value = self.q_table[current_state, action]
@@ -41,14 +43,23 @@ class QLearning:
             (reward + self.discount_factor * max_next_q_value - q_value)
         self.q_table[current_state, action] = new_q_value
 
-    def learn(self, episodes):
+    def learn(self, episodes, learning_rate, discount_factor, epsilon):
         print("Learning has started")
+        self.q_table = np.zeros((self.env.size * self.env.size, 4))
+
+        self.learning_rate = learning_rate
+        self.discount_factor = discount_factor
+        self.epsilon = epsilon
+        print(
+            f'Leanring rate [{self.learning_rate}] | Discount_factor [{self.discount_factor}] | Epsilon [{self.epsilon}]')
         steps_per_episode = []
         for episode in range(episodes):
             steps = 0
             total_reward = 0
             # Resetting the environment
             self.env.reset()
+            print(
+                f'For episode{episode} : Leanring rate [{self.learning_rate}] | Discount_factor [{self.discount_factor}] | Epsilon [{self.epsilon}]')
 
             while not self.env.isReached:
                 current_state = self.env.get_current_state_index()
@@ -65,15 +76,17 @@ class QLearning:
 
                 # Visualize the grid at each step
             steps_per_episode.append(steps)
-            print(
-                f'Episode {episode+1}: Total Reward: {total_reward}, Steps: {steps}')
+            # print(
+            #     f'Episode {episode+1}: Total Reward: {total_reward}, Steps: {steps}')
             # Epsilon decay for exploration vs exploitation
             self.epsilon = max(
                 self.min_epsilon, self.epsilon * self.epsilon_decay)
 
          # Optionally, visualize the results or save them
-        print('Training completed. Total steps per episode: ', steps_per_episode)
-        print('---------------------------------------------------')
+        # print('Training completed. Total steps per episode: ', steps_per_episode)
+        # print('---------------------------------------------------')
+        print(self.q_table)
+        time.sleep(5)
 
     def save_data(self):
         q_table = self.q_table
@@ -95,6 +108,8 @@ class QLearning:
         print(f"Data saved successfully at {file_path}")
 
 
-# q_learning = QLearning(learning_rate=0.3, discount_factor=0.95, epsilon=0.8)
-# q_learning.learn(1500)
+# q_learning = QLearning()
+# q_learning.learn(1500, 0.3, 0.95, 0.8)
+# q_learning.save_data()
+# q_learning.learn(1500, 0.9, 0.95, 0.8)
 # q_learning.save_data()
